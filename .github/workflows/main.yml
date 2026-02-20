@@ -7,6 +7,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # خطوة إضافية لتنظيف مساحة السيرفر عشان ما يفشل في النهاية
+      - name: Free Disk Space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+
       - name: Install Dependencies
         run: |
           sudo apt update
@@ -21,5 +28,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Final-App-Ready
+          name: Final-App
           path: bin/*.apk
