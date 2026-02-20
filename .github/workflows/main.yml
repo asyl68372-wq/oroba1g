@@ -7,19 +7,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Install System Dependencies
+      - name: Install Dependencies
         run: |
           sudo apt update
           sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev build-essential
-          pip install --upgrade pip
           pip install --user --upgrade buildozer Cython==0.29.33 kivy
 
-      - name: Build with Buildozer
+      - name: Build APK
         run: |
           export PATH=$PATH:$HOME/.local/bin
           yes | buildozer -v android debug
@@ -27,5 +21,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Final-App-APK
+          name: Final-App-Ready
           path: bin/*.apk
