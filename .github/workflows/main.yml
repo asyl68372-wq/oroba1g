@@ -5,8 +5,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Get Date
+        id: get-date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       - name: Build with Buildozer
         uses: ArtemSerebriakov/buildozer-action@v1
         with:
           buildozer_version: stable
           command: android debug
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: MyApp-APK
+          path: bin/*.apk
