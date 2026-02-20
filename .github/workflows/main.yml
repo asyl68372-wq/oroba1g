@@ -7,12 +7,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # خطوة إضافية لتنظيف مساحة السيرفر عشان ما يفشل في النهاية
-      - name: Free Disk Space
+      - name: Maximize Runner Space
+        # هذا الأمر يمسح حرفياً جيجابايتات من الملفات غير الضرورية في سيرفر GitHub
         run: |
           sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
           sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf /usr/share/swift
+          sudo rm -rf /usr/local/share/powershell
+          sudo rm -rf /usr/local/include/google
+          sudo rm -rf /usr/local/lib/node_modules
+          docker image prune -a -f
 
       - name: Install Dependencies
         run: |
@@ -23,10 +29,12 @@ jobs:
       - name: Build APK
         run: |
           export PATH=$PATH:$HOME/.local/bin
+          # تنظيف أي بقايا سابقة قبل البدء
+          buildozer android clean
           yes | buildozer -v android debug
         
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Final-App
+          name: MobileApp-Final
           path: bin/*.apk
